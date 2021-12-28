@@ -1,6 +1,7 @@
 import SignUpPage from './SignUpPage.vue';
 import {render, screen} from '@testing-library/vue';
-import '@testing-library/jest-dom'
+import '@testing-library/jest-dom';
+import userEvent from '@testing-library/user-event';
 
 describe("Sign Up Page", () => {
    describe("Layout", () => {
@@ -50,7 +51,6 @@ describe("Sign Up Page", () => {
          expect(button).toBeDisabled();
       });
 
-
       //Tests using the placeholder
       // it("has username input", () =>{
       //    render(SignUpPage);
@@ -64,4 +64,16 @@ describe("Sign Up Page", () => {
       // });
      
    });
+   describe('Interactions', () => {
+      it("enables the button when the password and password repeat fields have the same value", async () =>{
+         render(SignUpPage);
+         const passwordInput = screen.queryByLabelText("Password");
+         const passwordRepeatInput = screen.queryByLabelText("Password Repeat");
+         await userEvent.type(passwordInput, "P4ssword");
+         await userEvent.type(passwordRepeatInput, "P4ssword");
+         const button = screen.queryByRole('button', {name: 'Sign Up'});
+         expect(button).toBeEnabled();
+      });
+   });
+   
 });
