@@ -19,6 +19,7 @@
     "@vue/cli-service": "~4.5.0",
     "@vue/compiler-sfc": "^3.0.0",
     "babel-eslint": "^10.1.0",
+    "babel-jest": "^26.6.3",
     "eslint": "^6.7.2",
     "eslint-plugin-vue": "^7.0.0",
     "jest": "^26.6.3",
@@ -45,8 +46,12 @@
     "not dead"
   ],
   "jest": {
+    "moduleFileExtensions": [
+      "js", "vue"
+    ],
     "transform": {
-      ".*\\.(vue)$": "vue-jest"
+      ".*\\.(vue)$": "vue-jest",
+      ".*\\.(js)$": "babel-jest"
     }
   }
 }
