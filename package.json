@@ -13,6 +13,8 @@
     "vue": "^3.0.0"
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^5.16.1",
+    "@testing-library/user-event": "^13.5.0",
     "@testing-library/vue": "^6.4.2",
     "@vue/cli-plugin-babel": "~4.5.0",
     "@vue/cli-plugin-eslint": "~4.5.0",
@@ -47,7 +49,8 @@
   ],
   "jest": {
     "moduleFileExtensions": [
-      "js", "vue"
+      "js",
+      "vue"
     ],
     "transform": {
       ".*\\.(vue)$": "vue-jest",
