@@ -2,8 +2,10 @@ import SignUpPage from './SignUpPage.vue';
 import {render, screen} from '@testing-library/vue';
 import '@testing-library/jest-dom';
 import userEvent from '@testing-library/user-event';
-import axios from 'axios';
-import "whatwg-fetch";
+// import axios from 'axios';
+import { setupServer } from 'msw/node';
+import {rest} from 'msw';
+// import 'whatwg-fetch';
 
 describe("Sign Up Page", () => {
    describe("Layout", () => {
@@ -67,7 +69,17 @@ describe("Sign Up Page", () => {
      
    });
    describe('Interactions', () => {
-      it("sends user email and password to backend after clicking the button", async () =>{
+      it("sends user email and password to backend after clicking the button", 
+      async () =>{
+         let requestBody;
+         const server = setupServer(
+            rest.post("/api/1.0/users", (req, res, ctx) =>{
+               requestBody = req.body;
+               return res(ctx.status(200));
+            })
+         );
+         server.listen();
+
          render(SignUpPage);
          const usernameInput = screen.queryByLabelText("Username");
          const emailInput = screen.queryByLabelText("E-mail");
@@ -80,16 +92,18 @@ describe("Sign Up Page", () => {
          const button = screen.queryByRole('button', {name: 'Sign Up'});
 
          //Mocking the backend 
-         const mockFn = jest.fn();
+         // const mockFn = jest.fn();
          // axios.post = mockFn;
-         window.fetch = mockFn;
+         // window.fetch = mockFn;
 
          await userEvent.click(button);
 
-         const firstCall = mockFn.mock.calls[0];
-         const body = JSON.parse(firstCall[1].body);
+         await server.close();
 
-         expect(body).toEqual({
+         // const firstCall = mockFn.mock.calls[0];
+         // const body = JSON.parse(firstCall[1].body);
+
+         expect(requestBody).toEqual({
             username: 'user1',
             email: 'user1@mail.com',
             password: 'P4ssword'
