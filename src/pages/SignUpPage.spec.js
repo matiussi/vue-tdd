@@ -2,6 +2,7 @@ import SignUpPage from './SignUpPage.vue';
 import {render, screen} from '@testing-library/vue';
 import '@testing-library/jest-dom';
 import userEvent from '@testing-library/user-event';
+import axios from 'axios'
 
 describe("Sign Up Page", () => {
    describe("Layout", () => {
@@ -65,14 +66,32 @@ describe("Sign Up Page", () => {
      
    });
    describe('Interactions', () => {
-      it("enables the button when the password and password repeat fields have the same value", async () =>{
+      it("sends user email and password to backend after clicking the button", async () =>{
          render(SignUpPage);
+         const usernameInput = screen.queryByLabelText("Username");
+         const emailInput = screen.queryByLabelText("E-mail");
          const passwordInput = screen.queryByLabelText("Password");
          const passwordRepeatInput = screen.queryByLabelText("Password Repeat");
+         await userEvent.type(usernameInput, "user1");
+         await userEvent.type(emailInput, "user1@mail.com");
          await userEvent.type(passwordInput, "P4ssword");
          await userEvent.type(passwordRepeatInput, "P4ssword");
          const button = screen.queryByRole('button', {name: 'Sign Up'});
-         expect(button).toBeEnabled();
+
+         //Mocking the backend 
+         const mockFn = jest.fn();
+         axios.post = mockFn;
+         
+         await userEvent.click(button);
+
+         const firstCall = mockFn.mock.calls[0];
+         const body = firstCall[1];
+
+         expect(body).toEqual({
+            username: 'user1',
+            email: 'user1@mail.com',
+            password: 'P4ssword'
+         });
       });
    });
    
