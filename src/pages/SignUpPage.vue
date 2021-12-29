@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import axios from "axios";
+// import axios from "axios";
 
 export default {
    name: "SignUpPage",
@@ -33,11 +33,23 @@ export default {
    methods: {
       //It's possible to prevent submit event by adding @click.prevent
       submit() {
-         axios.post("/api/1.0/users", {
+         const requestBody = {
             username: this.username,
             email: this.email,
             password: this.password,
-         });
+         }
+         // axios.post("/api/1.0/users", {
+         //    username: this.username,
+         //    email: this.email,
+         //    password: this.password,
+         // });
+         fetch("/api/1.0/users", {
+            method: "POST",
+            body: JSON.stringify(requestBody),
+            headers:{
+               "Content-type": "application/json"
+            }
+         })
       },
    },
    computed: {
